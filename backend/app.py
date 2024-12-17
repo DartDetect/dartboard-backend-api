@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import boto3
+from PIL import Image
+import io
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -25,6 +27,7 @@ def get_presigned_url():
     try:
         # Get the filename from the query parameters
         filename = request.args.get("filename", "default.jpg")
+        content_type = request.args.get("content_type", "image/jpeg")  # Default to image/jpeg
 
         # Generate the pre-signed URL
         presigned_url = s3_client.generate_presigned_url(
@@ -32,16 +35,45 @@ def get_presigned_url():
             Params={
                 "Bucket": AWS_BUCKET_NAME,
                 "Key": filename,
-                "ContentType": "image/jpeg",
+                "ContentType": content_type,
             },
             ExpiresIn=3600,  # URL expires in 1 hour
         )
 
-        return jsonify({"url": presigned_url}), 200
+        return jsonify({"url": presigned_url}), 200 # Return error message with status code 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500 # Return error message with status code 500
+
+    # Endpoint to retrieve and process the image from S3
+@app.route("/process_image", methods=["POST"])
+def process_image():
+    try:
+        # Get the filename from the JSON payload
+        data = request.get_json()
+        filename = data.get("filename")
+
+        if not filename:
+            return jsonify({"error": "Filename is required"}), 400
+
+        # Retrieve the image from S3
+        s3_object = s3_client.get_object(Bucket=AWS_BUCKET_NAME, Key=filename)
+        image_data = s3_object["Body"].read()
+
+        # Process the image 
+        image = Image.open(io.BytesIO(image_data))
+
+        # Yolo model will be used it
+        calculated_score = 100  # Placeholder score for mock demo
+
+        # Respond to the client
+        return jsonify({
+            "message": "Image received and processed successfully.",
+            "filename": filename,
+            "score": calculated_score  # Mock calulcated score
+        }), 200
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
 
    # Run Flask app
 if __name__ == "__main__":
