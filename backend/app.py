@@ -74,7 +74,9 @@ def process_image():
 
         # Extract detectiopn results
         detections= results.pandas().xyxy[0].to_dict(orient='records')
+        print("🔍 Full Detections:", detections)  # Print full detections for debugging
 
+       
         # Yolo model will be used it
         ##calculated_score = 100  # Placeholder score for mock demo
 
