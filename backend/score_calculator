@@ -1,4 +1,13 @@
 import math
 
-def calculate_dart_score(dartboard, darts):
-    return
+# Calculate the score of a dart bases on its detected position on the dartboard
+def calculate_dart_score(dartboard, dart, bull =None):
+
+    # Calculate dartboard center and radius
+    cx = (dartboard["xmin"] + dartboard["xmax"]) / 2
+    cy = (dartboard["ymin"] + dartboard["ymax"]) / 2
+
+    radius =(dartboard["xmax"] - dartboard["xmin"]) / 2 # Approx. radius for now
+   
+    return  cx, cy, radius
+
