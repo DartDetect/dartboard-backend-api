@@ -1,4 +1,5 @@
 import math
+import unittest
 
 # Calculate the score of a dart bases on its detected position on the dartboard
 def calculate_dart_score(dartboard, dart, bull =None):
@@ -16,8 +17,17 @@ def calculate_dart_score(dartboard, dart, bull =None):
     # Calculate distance from dartboard center
     distance = math.sqrt((dx- cx)**2 + (dy - cy)**2)
 
-    return  distance # For now return distance as score
+    #Calculate angle to determine which sector the dart is in
+    angle = math.degrees(math.atan2(dy - cy, dx - cx))
+    angle= (angle + 350) % 360 # Normalize angle 
 
+    # Dartboard numbering order (clockwise from 20)
+    dartboard_numbers = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5]
 
+    # Determine segment (each being 18 degrees)
+    segment_index = int(angle + 9 // 18) % 20 # 20 segments in total
+    base_score = dartboard_numbers[segment_index]
+ 
+    return  base_score# Now returning base score
 
 
