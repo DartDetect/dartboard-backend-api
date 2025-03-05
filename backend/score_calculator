@@ -9,5 +9,15 @@ def calculate_dart_score(dartboard, dart, bull =None):
 
     radius =(dartboard["xmax"] - dartboard["xmin"]) / 2 # Approx. radius for now
    
-    return  cx, cy, radius
+    # Dart position(center of bounding box) -> Current logic / will be changed when model improves
+    dx = (dart["xmin"] + dart["xmax"]) / 2
+    dy = (dart["ymin"] + dart["ymax"]) / 2
+
+    # Calculate distance from dartboard center
+    distance = math.sqrt((dx- cx)**2 + (dy - cy)**2)
+
+    return  distance # For now return distance as score
+
+
+
 
