@@ -19,7 +19,7 @@ def calculate_dart_score(dartboard, dart, bull =None):
 
     #Calculate angle to determine which sector the dart is in
     angle = math.degrees(math.atan2(dy - cy, dx - cx))
-    angle= (angle + 350) % 360 # Normalize angle 
+    angle= (angle + 360) % 360 # Normalize angle 
 
     # Dartboard numbering order (clockwise from 20)
     dartboard_numbers = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5]
@@ -28,6 +28,11 @@ def calculate_dart_score(dartboard, dart, bull =None):
     segment_index = int(angle + 9 // 18) % 20 # 20 segments in total
     base_score = dartboard_numbers[segment_index]
  
+    # Check for bullseye first (checking for bull first due to the way the model is trained)
+    if bull:
+        if dart["xmin"] >= bull["xmin"] and dart["xmax"] <= bull["xmax"] and dart["ymin"] >= bull["ymin"] and dart["ymax"] <= bull["ymax"]:
+            return 50 # Bullseye
+        
     return  base_score# Now returning base score
 
 
