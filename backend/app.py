@@ -3,9 +3,16 @@ from flask_cors import CORS
 import boto3
 from PIL import Image
 import io
+import torch
+from models.load_model import load_yolov5_model # Import the load_yolov5_model function
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+#Load Model on Server Startup
+model = load_yolov5_model()
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
 
 # AWS S3 Configuration
 AWS_ACCESS_KEY = "AKIAXBZV5WXIOTQ6BNVX" 
