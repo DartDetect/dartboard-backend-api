@@ -4,7 +4,7 @@ import boto3
 from PIL import Image
 import io
 import torch
-from models.load_model import load_yolov5_model # Import the load_yolov5_model function
+from backend.models.load_model import load_yolov5_model # Import the load_yolov5_model function
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -66,18 +66,31 @@ def process_image():
         s3_object = s3_client.get_object(Bucket=AWS_BUCKET_NAME, Key=filename)
         image_data = s3_object["Body"].read()
 
-        # Process the image 
-        image = Image.open(io.BytesIO(image_data))
+        # Process the image (PIL format)
+        image = Image.open(io.BytesIO(image_data)).convert("RGB")
+
+        # Run YOLOv5 inference 
+        results = model(image)
+
+        # Extract detectiopn results
+        detections= results.pandas().xyxy[0].to_dict(orient='records')
 
         # Yolo model will be used it
-        calculated_score = 100  # Placeholder score for mock demo
+        ##calculated_score = 100  # Placeholder score for mock demo
 
-        # Respond to the client
+        # Respond with detected objects
         return jsonify({
             "message": "Image received and processed successfully.",
             "filename": filename,
-            "score": calculated_score  # Mock calulcated score
+            "detections": detections
         }), 200
+
+        # # Respond to the client
+        # return jsonify({
+        #     "message": "Image received and processed successfully.",
+        #     "filename": filename,
+        #     "score": calculated_score  # Mock calulcated score
+        # }), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

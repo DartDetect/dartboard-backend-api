@@ -1,8 +1,14 @@
 import os
 import torch
+from pathlib import Path
+import sys
+
 
 # Absolute paths for the YOLOv5 directory and the trained model file
 YOLOV5_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "../yolov5")) # Path to YOLOv5 repo
+if YOLOV5_PATH not in sys.path:
+    sys.path.append(YOLOV5_PATH)
+    
 MODEL_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "best.pt")) # Path to trained model file
 
 def load_yolov5_model():
