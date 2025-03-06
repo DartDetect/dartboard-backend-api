@@ -77,6 +77,30 @@ def process_image():
         detections= results.pandas().xyxy[0].to_dict(orient='records')
         print("🔍 Full Detections:", detections)  # Print full detections for debugging
 
+         # Identify Dart, Dartboard, and Bull
+        dartboard = None
+        bull = None
+        darts = []
+
+        for obj in detections:
+            if obj["name"] == "Dartboard":
+                dartboard = obj
+            elif obj["name"] == "Bull":
+                bull = obj
+            elif obj["name"] == "Dart":
+                darts.append(obj)
+
+         # Ensure dartboard is detected before calculating score
+        if not dartboard:
+            return jsonify({"error": "Dartboard not detected, cannot calculate score"}), 400
+        
+        # Calculate score for each dart
+        scores = []
+        for dart in darts:
+            score = calculate_dart_score(dartboard, dart, bull)
+            scores.append({"dart": dart, "score": score})
+
+
        
         # Yolo model will be used it
         ##calculated_score = 100  # Placeholder score for mock demo
@@ -85,7 +109,8 @@ def process_image():
         return jsonify({
             "message": "Image received and processed successfully.",
             "filename": filename,
-            "detections": detections
+            "detections": detections,
+            "scores": scores
         }), 200
 
         # # Respond to the client
