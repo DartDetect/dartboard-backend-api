@@ -4,6 +4,7 @@ import boto3
 from PIL import Image
 import io
 import torch
+from backend.models.dart_score import calculate_dart_score
 from backend.models.load_model import load_yolov5_model # Import the load_yolov5_model function
 
 app = Flask(__name__)
