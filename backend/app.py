@@ -16,8 +16,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
 # AWS S3 Configuration
-AWS_ACCESS_KEY = "AKIAXBZV5WXIOTQ6BNVX" 
-AWS_SECRET_KEY = "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"  
+AWS_ACCESS_KEY = "AKIAXBZV5WXIICW5WYTN" 
+AWS_SECRET_KEY = "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"  
 AWS_BUCKET_NAME = "dart-detect-images"  
 AWS_REGION = "eu-north-1"
 
