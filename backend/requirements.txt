@@ -4,3 +4,5 @@ torchvision
 pillow
 boto3  
 requests  
+python-dotenv
+numpy
