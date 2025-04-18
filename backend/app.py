@@ -7,6 +7,12 @@ import torch
 from backend.models.dart_score import calculate_dart_score
 from backend.models.load_model import load_yolov5_model # Import the load_yolov5_model function
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Loads variables from .env into environment
+
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
@@ -16,10 +22,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
 # AWS S3 Configuration
-AWS_ACCESS_KEY = "AKIAXBZV5WXIICW5WYTN" 
-AWS_SECRET_KEY = "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"  
-AWS_BUCKET_NAME = "dart-detect-images"  
-AWS_REGION = "eu-north-1"
+AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_BUCKET_NAME = os.getenv("AWS_BUCKET_NAME", "dart-detect-images")
+AWS_REGION = os.getenv("AWS_REGION", "eu-north-1")
+
 
 # Initialize S3 Client
 s3_client = boto3.client(
