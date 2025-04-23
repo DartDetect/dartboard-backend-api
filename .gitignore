@@ -16,8 +16,7 @@ Thumbs.db
 # VS Code settings
 .vscode/
 
-# models
-backend/models/best.pt
+
 
 # .env
 .env
